@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <iomanip>
+#include <string>
 #include <iostream>
 using namespace std;
 
@@ -10,28 +11,48 @@ using namespace std;
 *******************************************************************************/
 
 template <typename T>
-T findMaxRecTail(const T[] arr, const int size, int = 0)
+T findMaxRecTail(const T arr[], const int size, int index = 0)
 {
     // TO DO: Implement your code
+    if (index == size - 1)
+        return arr[index];
+
+    T maxOfRest = findMaxRecTail(arr, size, index + 1);
+
+    if (arr[index] > maxOfRest) {
+        maxOfRest = arr[index];
+    }
+    return maxOfRest;
 }
 
+
+
 template <typename T>
-T findMaxRecBinarySplit(const T[] arr, const int left, const int right)
+T findMaxRecBinarySplit(const T arr[], const int left, const int right)
 {
     // TO DO: Implement your code
+    
+    // the base case: one element
+    if (left == right)
+        return arr[left];
+
+    // Find midpoint
+    int mid = left + (right - left) / 2;
+
+    // recursively find max in left and right halves
+    T leftMax = findMaxRecBinarySplit(arr, left, mid);
+    T rightMax = findMaxRecBinarySplit(arr, mid + 1, right);
+
+    // return the larger of the two
+    if (leftMax > rightMax) {
+        return leftMax;
+    }
+    else
+        return rightMax;
 }
-/*******************************************************************************
- * Description:
- * Starting point of the program. Creates two arrays, one fixed and the other
- * random. Determines the maximum value by calling the local function and the
- * standard function.
- * 
- * Input:
- * N/A
- *
- * Output:
- * An integer to signal to the OS the exit code.
-*******************************************************************************/
+
+
+
 
 int main() {
     // create the array
@@ -44,9 +65,9 @@ int main() {
     // display the maximum
     cout << setfill('-') << setw(40) << "" << endl;
     cout << "Maximum using Recursion: "
-         << findMaxRecTail(myArray, SIZE) << endl 
-         << "From Binary split:" 
-        << findMaxRecBinarySplit(myArray, 0, SIZE-1)
+        << findMaxRecTail(myArray, SIZE) << endl
+        << "From Binary split:"
+        << findMaxRecBinarySplit(myArray, 0, SIZE - 1) << endl
          << "Should be 130 for the fixed array\n";
     cout << setfill('-') << setw(40) << "" << endl << endl;
 
